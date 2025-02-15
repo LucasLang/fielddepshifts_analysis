@@ -1,4 +1,6 @@
 using MagFieldLFT
+using LinearAlgebra
+using DelimitedFiles
 
 include("modeldefinition.jl")
 
@@ -27,4 +29,9 @@ PCS_highfield = MagFieldLFT.calc_shifts_2ndorder_total(lft, T, B0_highfield)
 shifts_lowfield = contactshifts_lowfield + PCS_lowfield
 shifts_highfield = contactshifts_highfield + PCS_highfield
 shifts_diff = shifts_highfield - shifts_lowfield
+
+println(typeof(shifts_lowfield))
+println(shifts_lowfield)
+println(shifts_highfield)
+writedlm("calc_shifts", [shifts_lowfield shifts_highfield])
 
