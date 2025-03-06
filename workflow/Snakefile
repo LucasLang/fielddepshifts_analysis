@@ -1,0 +1,58 @@
+outfolder = "../results"
+modelfolder = "../results/model"
+modelfiles = [f"{modelfolder}/NiSAL_AILFT.out"]
+
+rule all:
+    input:
+        f"{outfolder}/finitefield_subplots_400_298.png"
+#        "../results/finitefield_subplots_400_298.png",
+#        "../results/finitefield_vs_2ndorder_273.png",
+#        "../results/convergence_gridsize_1200_273_lebedev.png"
+#        "../results/convergence_gridsize_400_298_repulsion.png"
+
+rule extract_model:
+    output:
+        modelfiles
+    params:
+        modelfolder = modelfolder
+    shell:
+        """
+        mkdir -p {params.modelfolder}
+        cp ../resources/NiSAL_AILFT.out {params.modelfolder}
+        """
+
+rule finitefield_subplots:
+    input:
+        data_convergence = f"{outfolder}/data_convergence_gridsize_{{B0MHz}}_{{temp}}_lebedev",
+        data_ffvs2nd = f"{outfolder}/data_finitefieldvs2ndorder_{{temp}}"
+    output:
+        f"{outfolder}/finitefield_subplots_{{B0MHz}}_{{temp}}.png"
+    params:
+        outfolder = outfolder
+    conda:
+        "envs/matplotlib.yaml"
+    shell:
+        "python scripts/plot_finitefield_subplots.py {wildcards.B0MHz} {wildcards.temp} {params.outfolder}"
+
+rule calc_convergence_gridsize:
+    input:
+        modelfiles
+    output:
+        f"{outfolder}/data_convergence_gridsize_{{B0MHz}}_{{temp}}_{{gridtype}}"
+    params:
+        outfolder = outfolder,
+        modelfolder = modelfolder
+    shell:
+        "julia scripts/calc_convergence_gridsize.jl {wildcards.B0MHz} {wildcards.temp} {wildcards.gridtype} {params.outfolder} {params.modelfolder}/NiSAL_AILFT.out"
+
+rule calc_finitefieldvs2ndorder:
+    input:
+        modelfiles
+    output:
+        f"{outfolder}/data_finitefieldvs2ndorder_{{temp}}"
+    params:
+        outfolder = outfolder,
+        modelfolder = modelfolder
+    shell:
+        "julia scripts/calc_finitefieldvs2ndorder.jl {wildcards.temp} {params.outfolder} {params.modelfolder}/NiSAL_AILFT.out"
+

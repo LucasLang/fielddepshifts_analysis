@@ -1,4 +1,4 @@
-using MagFieldLFT
+using ParaMag
 using LinearAlgebra
 using DelimitedFiles
 
@@ -14,15 +14,15 @@ B0_lowfield = B0_MHz_lowfield/42.577478518/2.35051756758e5  # trafo from MHz to 
 # CONTACT SHIFTS
 
 shparam = get_shparam()
-sh = MagFieldLFT.SpinHamiltonian(shparam)
-contactshifts_lowfield = MagFieldLFT.calc_shifts_2ndorder_total(sh, T, B0_lowfield)
-contactshifts_highfield = MagFieldLFT.calc_shifts_2ndorder_total(sh, T, B0_highfield)
+sh = ParaMag.SpinHamiltonian(shparam)
+contactshifts_lowfield = ParaMag.calc_shifts_2ndorder_total(sh, T, B0_lowfield)
+contactshifts_highfield = ParaMag.calc_shifts_2ndorder_total(sh, T, B0_highfield)
 
 # PSEUDOCONTACT SHIFTS
 
 lft = get_lft()
-PCS_lowfield = MagFieldLFT.calc_shifts_2ndorder_total(lft, T, B0_lowfield)
-PCS_highfield = MagFieldLFT.calc_shifts_2ndorder_total(lft, T, B0_highfield)
+PCS_lowfield = ParaMag.calc_shifts_2ndorder_total(lft, T, B0_lowfield)
+PCS_highfield = ParaMag.calc_shifts_2ndorder_total(lft, T, B0_highfield)
 
 # TOTAL SHIFTS
 
@@ -33,5 +33,5 @@ shifts_diff = shifts_highfield - shifts_lowfield
 println(typeof(shifts_lowfield))
 println(shifts_lowfield)
 println(shifts_highfield)
-writedlm("calc_shifts", [shifts_lowfield shifts_highfield])
+writedlm("shifts_2ndorder", [shifts_lowfield shifts_highfield])
 

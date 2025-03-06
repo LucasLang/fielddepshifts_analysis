@@ -1,0 +1,5 @@
+channels:
+  - conda-forge
+dependencies:
+  - matplotlib=3.7.1
+
