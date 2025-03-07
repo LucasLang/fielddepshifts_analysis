@@ -14,8 +14,6 @@ if length(ref_index) != 1
 end
 ref_index = ref_index[1]
 
-println(coord)
-println(H_indices)
 Rvectors = [coord[ref_index] - coord[i] for i in H_indices]
 
 Rvectors_matrix = vcat(Rvectors'...)    # turn vector of vectors into 2D matrix

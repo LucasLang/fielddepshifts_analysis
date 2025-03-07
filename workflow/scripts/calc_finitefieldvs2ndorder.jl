@@ -12,7 +12,7 @@ AILFTfile = ARGS[3]
 
 grid = lebedev_grids[3]
 
-shparam = get_shparam()
+shparam = get_shparam("$outfolder/model")
 sh = ParaMag.SpinHamiltonian(shparam)       # model used for contact shifts
 lft = get_lft(AILFTfile, "$outfolder/model")         # model used for PCS
 

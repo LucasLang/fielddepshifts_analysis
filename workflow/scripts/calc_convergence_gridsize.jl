@@ -26,7 +26,7 @@ T = 298.0  # temperature
 B0_MHz = 400
 B0 = B0_MHz/42.577478518/2.35051756758e5  # trafo from MHz to Tesla and then to atomic units
 
-shparam = get_shparam()
+shparam = get_shparam("$outfolder/model")
 sh = ParaMag.SpinHamiltonian(shparam)       # model used for contact shifts
 lft = get_lft(AILFTfile, "$outfolder/model")                                 # model used for PCS
 

@@ -1,10 +1,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
-def left_plot(ax):
-    exp = np.loadtxt('expshift_nisalhdpt_wolabels.txt')
-    calc = np.loadtxt('calc_shifts')
+expdatafile = sys.argv[1]
+calcdatafile = sys.argv[2]
+outfolder = sys.argv[3]
 
+exp = np.loadtxt(expdatafile)
+calc = np.loadtxt(calcdatafile)
+
+def left_plot(ax, exp, calc):
     exp400 = exp[:, 0]
     calc400 = calc[:, 0]
 
@@ -17,10 +22,7 @@ def left_plot(ax):
     ax.set_xlabel(r"$\delta_\mathrm{exp}$(400 MHz) / ppm")
     ax.set_ylabel(r"$\delta_\mathrm{calc}$(400 MHz) / ppm")
 
-def right_plot(ax):
-    exp = np.loadtxt('expshift_nisalhdpt_wolabels.txt')
-    calc = np.loadtxt('calc_shifts')
-
+def right_plot(ax, exp, calc):
     exp_diff = exp[:, 1] - exp[:, 0]
     calc_diff = calc[:, 1] - calc[:, 0]
 
@@ -34,7 +36,7 @@ def right_plot(ax):
     ax.set_ylabel(r"$\Delta\delta_\mathrm{calc}$(1.2 GHz − 400 MHz) / ppm")
 
 fig, axes = plt.subplots(1, 2, figsize = (6,3))
-left_plot(axes[0])
-right_plot(axes[1])
+left_plot(axes[0], exp, calc)
+right_plot(axes[1], exp, calc)
 plt.tight_layout()
-plt.savefig("correlationplots_subplots.png", dpi=300)
+plt.savefig(f"{outfolder}/correlationplots_subplots.png", dpi=300)

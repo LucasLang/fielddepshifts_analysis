@@ -4,7 +4,8 @@ modelfiles = [f"{modelfolder}/NiSAL_AILFT.out", f"{modelfolder}/Rvectors"]
 
 rule all:
     input:
-        f"{outfolder}/finitefield_subplots_400_298.png"
+        f"{outfolder}/finitefield_subplots_400_298.png",
+        f"{outfolder}/correlationplots_subplots.png"
         #f"{outfolder}/convergence_gridsize_1200_273_lebedev.png",
         #f"{outfolder}/convergence_gridsize_400_298_repulsion.png"
 #        "../results/finitefield_subplots_400_298.png",
@@ -24,6 +25,7 @@ rule extract_model:
         mkdir -p {params.modelfolder}
         cp {input.ORCA_CASSCF} {params.modelfolder}/NiSAL_AILFT.out
         julia scripts/extract_Rvectors.jl {input.ORCA_CASSCF} {params.modelfolder}
+        julia scripts/extract_ZFStensor.jl {input.ORCA_CASSCF} {params.modelfolder}
         """
 
 rule finitefield_subplots:
@@ -79,9 +81,10 @@ rule calc_shifts_2ndorder:
     output:
         f"{outfolder}/data_shifts_2ndorder"
     params:
-        outfolder = outfolder
+        outfolder = outfolder,
+        modelfolder = modelfolder
     shell:
-        "julia scripts/calc_shifts_2ndorder {params.outfolder}"
+        "julia scripts/calc_shifts_2ndorder.jl {params.modelfolder}/NiSAL_AILFT.out {params.outfolder}"
 
 rule correlationplots_subplots:
     input:

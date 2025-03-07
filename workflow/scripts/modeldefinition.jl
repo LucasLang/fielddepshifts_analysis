@@ -1,12 +1,10 @@
 using DelimitedFiles
 
-function get_shparam()
+function get_shparam(modelfolder)
     mult = 3
     from_au = 27.2113834*8065.54477
     # D from casscf-nevpt2 effective hamiltonian
-    D = [  3.053926    -5.555174   -16.580693;
-    -5.555174    22.210495    -7.191116;
-    -16.580693    -7.191116    -0.939858]
+    D = readdlm("$modelfolder/Dtensor")
     D *= ParaMag.cmm1_Hartree  #from cm-1 to au (Hartree)
 
     # g from DFT
