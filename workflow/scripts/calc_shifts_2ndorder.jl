@@ -4,8 +4,7 @@ using DelimitedFiles
 
 include("modeldefinition.jl")
 
-AILFTfile = ARGS[1]
-outfolder = ARGS[2]
+outfolder = ARGS[1]
 
 # SETTINGS
 T = 298.0
@@ -23,7 +22,7 @@ contactshifts_highfield = ParaMag.calc_shifts_2ndorder_total(sh, T, B0_highfield
 
 # PSEUDOCONTACT SHIFTS
 
-lft = get_lft(AILFTfile, "$outfolder/model")
+lft = get_lft("$outfolder/model")
 PCS_lowfield = ParaMag.calc_shifts_2ndorder_total(lft, T, B0_lowfield)
 PCS_highfield = ParaMag.calc_shifts_2ndorder_total(lft, T, B0_highfield)
 

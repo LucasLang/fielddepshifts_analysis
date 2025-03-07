@@ -16,7 +16,6 @@ elseif gridtype == "repulsion"
 end
 
 outfolder = ARGS[4]
-AILFTfile = ARGS[5]
 
 outputfile = "$(outfolder)/data_convergence_gridsize_$(B0_MHz)_$(T)_$gridtype"
 
@@ -28,7 +27,7 @@ B0 = B0_MHz/42.577478518/2.35051756758e5  # trafo from MHz to Tesla and then to 
 
 shparam = get_shparam("$outfolder/model")
 sh = ParaMag.SpinHamiltonian(shparam)       # model used for contact shifts
-lft = get_lft(AILFTfile, "$outfolder/model")                                 # model used for PCS
+lft = get_lft("$outfolder/model")                                 # model used for PCS
 
 
 

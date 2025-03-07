@@ -23,8 +23,8 @@ function get_shparam(modelfolder)
     return shparam
 end
 
-function get_lft(AILFTfile, modelfolder)
-    param = read_AILFT_params_ORCA(AILFTfile, "NEVPT2")
+function get_lft(modelfolder)
+    param = read_AILFT_params_ORCA("$modelfolder/AILFT.out", "NEVPT2")
     bohrinangstrom = 0.529177210903
 
     Rvectors = readdlm("$modelfolder/Rvectors")

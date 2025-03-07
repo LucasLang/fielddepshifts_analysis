@@ -8,13 +8,12 @@ include("modeldefinition.jl")
 T_str = ARGS[1]    # temperature
 T = parse(Float64, T_str)
 outfolder = ARGS[2]
-AILFTfile = ARGS[3]
 
 grid = lebedev_grids[3]
 
 shparam = get_shparam("$outfolder/model")
 sh = ParaMag.SpinHamiltonian(shparam)       # model used for contact shifts
-lft = get_lft(AILFTfile, "$outfolder/model")         # model used for PCS
+lft = get_lft("$outfolder/model")         # model used for PCS
 
 B0_MHz_values = [val for val in 100:10:3000]
 results = Array{Float64}(undef, length(B0_MHz_values), 4)    # we store B0_MHz, mean, min, max

@@ -1,6 +1,6 @@
 outfolder = "../results"
 modelfolder = "../results/model"
-modelfiles = [f"{modelfolder}/NiSAL_AILFT.out",
+modelfiles = [f"{modelfolder}/AILFT.out",
               f"{modelfolder}/Rvectors",
               f"{modelfolder}/Dtensor",
               f"{modelfolder}/gtensor",
@@ -9,13 +9,18 @@ modelfiles = [f"{modelfolder}/NiSAL_AILFT.out",
 rule all:
     input:
         f"{outfolder}/finitefield_subplots_400_298.png",
-        f"{outfolder}/correlationplots_subplots.png"
+        f"{outfolder}/correlationplots_subplots.png",
+        f"{outfolder}/populations_spin_1_2"
         #f"{outfolder}/convergence_gridsize_1200_273_lebedev.png",
         #f"{outfolder}/convergence_gridsize_400_298_repulsion.png"
-#        "../results/finitefield_subplots_400_298.png",
-#        "../results/finitefield_vs_2ndorder_273.png",
-#        "../results/convergence_gridsize_1200_273_lebedev.png"
-#        "../results/convergence_gridsize_400_298_repulsion.png"
+
+rule populations_spin_1_2:
+    output:
+        f"{outfolder}/populations_spin_1_2"
+    params:
+        outfolder = outfolder
+    shell:
+        "julia scripts/calc_populations_1_2.jl {params.outfolder}"
 
 rule extract_model:
     input:
@@ -28,7 +33,7 @@ rule extract_model:
     shell:
         """
         mkdir -p {params.modelfolder}
-        cp {input.ORCA_CASSCF} {params.modelfolder}/NiSAL_AILFT.out
+        cp {input.ORCA_CASSCF} {params.modelfolder}/AILFT.out
         julia scripts/extract_Rvectors.jl {input.ORCA_CASSCF} {params.modelfolder}
         julia scripts/extract_ZFStensor.jl {input.ORCA_CASSCF} {params.modelfolder}
         julia scripts/extract_gtensor.jl {input.ORCA_DFT} {params.modelfolder}
@@ -69,7 +74,7 @@ rule calc_convergence_gridsize:
         outfolder = outfolder,
         modelfolder = modelfolder
     shell:
-        "julia scripts/calc_convergence_gridsize.jl {wildcards.B0MHz} {wildcards.temp} {wildcards.gridtype} {params.outfolder} {params.modelfolder}/NiSAL_AILFT.out"
+        "julia scripts/calc_convergence_gridsize.jl {wildcards.B0MHz} {wildcards.temp} {wildcards.gridtype} {params.outfolder}"
 
 rule calc_finitefieldvs2ndorder:
     input:
@@ -80,7 +85,7 @@ rule calc_finitefieldvs2ndorder:
         outfolder = outfolder,
         modelfolder = modelfolder
     shell:
-        "julia scripts/calc_finitefieldvs2ndorder.jl {wildcards.temp} {params.outfolder} {params.modelfolder}/NiSAL_AILFT.out"
+        "julia scripts/calc_finitefieldvs2ndorder.jl {wildcards.temp} {params.outfolder}"
 
 rule calc_shifts_2ndorder:
     input:
@@ -91,7 +96,7 @@ rule calc_shifts_2ndorder:
         outfolder = outfolder,
         modelfolder = modelfolder
     shell:
-        "julia scripts/calc_shifts_2ndorder.jl {params.modelfolder}/NiSAL_AILFT.out {params.outfolder}"
+        "julia scripts/calc_shifts_2ndorder.jl {params.outfolder}"
 
 rule correlationplots_subplots:
     input:
