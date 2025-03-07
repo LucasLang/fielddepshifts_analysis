@@ -15,7 +15,8 @@ rule all:
 
 rule extract_model:
     input:
-        ORCA_CASSCF = "../resources/run_nisalfix_susc.out"
+        ORCA_CASSCF = "../resources/run_nisalfix_susc.out",
+        ORCA_DFT = "../resources/run_nisalfix_eprnmr.out"
     output:
         modelfiles
     params:
@@ -26,6 +27,7 @@ rule extract_model:
         cp {input.ORCA_CASSCF} {params.modelfolder}/NiSAL_AILFT.out
         julia scripts/extract_Rvectors.jl {input.ORCA_CASSCF} {params.modelfolder}
         julia scripts/extract_ZFStensor.jl {input.ORCA_CASSCF} {params.modelfolder}
+        julia scripts/extract_gtensor.jl {input.ORCA_DFT} {params.modelfolder}
         """
 
 rule finitefield_subplots:
