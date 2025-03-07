@@ -11,7 +11,7 @@ function get_shparam(modelfolder)
     g = readdlm("$modelfolder/gtensor")
 
     # Aiso from DFT
-    Aiso_values_MHz = [-0.2331, 0.3653, -0.0954, 0.1193, 5.6580, 0.8620, 2.5742, 1.0047, 2.2524, -0.1988, 0.3778, -0.0329, 0.0972, 5.7645, -0.1113, -0.1049, 1.2796, 4.0481, 3.9413, 0.9147, -0.1715, -0.1959, -3.6282]
+    Aiso_values_MHz = vec(readdlm("$modelfolder/Aiso_values"))
     Aiso_values_Hartree = Aiso_values_MHz * 1e6 * 2pi * ParaMag.au_time  # conversion from frequency to energy in atomic units: E = omega = 2pi nu
     Atensors = [Aiso*Matrix(1.0I, 3, 3) for Aiso in Aiso_values_Hartree]
     Nnuc = length(Atensors)
