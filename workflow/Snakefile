@@ -1,18 +1,20 @@
 outfolder = "../results"
 modelfolder = "../results/model"
-modelfiles = [f"{modelfolder}/NiSAL_AILFT.out"]
+modelfiles = [f"{modelfolder}/NiSAL_AILFT.out", f"{modelfolder}/Rvectors"]
 
 rule all:
     input:
-        f"{outfolder}/finitefield_subplots_400_298.png",
-        f"{outfolder}/convergence_gridsize_1200_273_lebedev.png",
-        f"{outfolder}/convergence_gridsize_400_298_repulsion.png"
+        f"{outfolder}/finitefield_subplots_400_298.png"
+        #f"{outfolder}/convergence_gridsize_1200_273_lebedev.png",
+        #f"{outfolder}/convergence_gridsize_400_298_repulsion.png"
 #        "../results/finitefield_subplots_400_298.png",
 #        "../results/finitefield_vs_2ndorder_273.png",
 #        "../results/convergence_gridsize_1200_273_lebedev.png"
 #        "../results/convergence_gridsize_400_298_repulsion.png"
 
 rule extract_model:
+    input:
+        ORCA_CASSCF = "../resources/run_nisalfix_susc.out"
     output:
         modelfiles
     params:
@@ -20,12 +22,13 @@ rule extract_model:
     shell:
         """
         mkdir -p {params.modelfolder}
-        cp ../resources/NiSAL_AILFT.out {params.modelfolder}
+        cp {input.ORCA_CASSCF} {params.modelfolder}/NiSAL_AILFT.out
+        julia scripts/extract_Rvectors.jl {input.ORCA_CASSCF} {params.modelfolder}
         """
 
 rule finitefield_subplots:
     input:
-        data_convergence = f"{outfolder}/data_convergence_gridsize_{{B0MHz}}_{{temp}}_lebedev",
+        data_convergence = f"{outfolder}/data_convergence_gridsize_{{B0MHz}}_{{temp}}_repulsion",
         data_ffvs2nd = f"{outfolder}/data_finitefieldvs2ndorder_{{temp}}"
     output:
         f"{outfolder}/finitefield_subplots_{{B0MHz}}_{{temp}}.png"
@@ -70,3 +73,25 @@ rule calc_finitefieldvs2ndorder:
     shell:
         "julia scripts/calc_finitefieldvs2ndorder.jl {wildcards.temp} {params.outfolder} {params.modelfolder}/NiSAL_AILFT.out"
 
+rule calc_shifts_2ndorder:
+    input:
+        modelfiles
+    output:
+        f"{outfolder}/data_shifts_2ndorder"
+    params:
+        outfolder = outfolder
+    shell:
+        "julia scripts/calc_shifts_2ndorder {params.outfolder}"
+
+rule correlationplots_subplots:
+    input:
+        expdatafile = "../resources/expshift_nisalhdpt_wolabels.txt",
+        calcdatafile = f"{outfolder}/data_shifts_2ndorder"
+    output:
+        f"{outfolder}/correlationplots_subplots.png"
+    params:
+        outfolder = outfolder
+    conda:
+        "envs/matplotlib.yaml"
+    shell:
+        "python scripts/plot_correlationplots_subplots.py {input.expdatafile} {input.calcdatafile} {params.outfolder}"

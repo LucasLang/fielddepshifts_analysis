@@ -9,7 +9,7 @@ T_str = sys.argv[2]
 T = float(T_str)
 outfolder = sys.argv[3]
 
-data_convergence = f"{outfolder}/data_convergence_gridsize_{B0MHz_str}_{T_str}_lebedev"
+data_convergence = f"{outfolder}/data_convergence_gridsize_{B0MHz_str}_{T_str}_repulsion"
 data_ffvs2nd = f"{outfolder}/data_finitefieldvs2ndorder_{T_str}"
 
 def right_plot(ax, data_ffvs2nd):
