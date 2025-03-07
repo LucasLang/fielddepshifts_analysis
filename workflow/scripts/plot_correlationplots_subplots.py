@@ -4,10 +4,13 @@ import sys
 
 expdatafile = sys.argv[1]
 calcdatafile = sys.argv[2]
-outfolder = sys.argv[3]
+excluded = sys.argv[3]
+outfolder = sys.argv[4]
 
 exp = np.loadtxt(expdatafile)
 calc = np.loadtxt(calcdatafile)
+excluded_indices = np.loadtxt(excluded)
+
 
 def left_plot(ax, exp, calc):
     exp400 = exp[:, 0]
@@ -36,7 +39,9 @@ def right_plot(ax, exp, calc):
     ax.set_ylabel(r"$\Delta\delta_\mathrm{calc}$(1.2 GHz − 400 MHz) / ppm")
 
 fig, axes = plt.subplots(1, 2, figsize = (6,3))
-left_plot(axes[0], exp, calc)
-right_plot(axes[1], exp, calc)
+
+included_indices = np.setdiff1d(np.arange(len(exp)), excluded_indices)
+left_plot(axes[0], exp[included_indices], calc[included_indices])
+right_plot(axes[1], exp[included_indices], calc[included_indices])
 plt.tight_layout()
 plt.savefig(f"{outfolder}/correlationplots_subplots.png", dpi=300)

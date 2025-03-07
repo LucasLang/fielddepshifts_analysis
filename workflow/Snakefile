@@ -96,7 +96,8 @@ rule calc_shifts_2ndorder:
 rule correlationplots_subplots:
     input:
         expdatafile = "../resources/expshift_nisalhdpt_wolabels.txt",
-        calcdatafile = f"{outfolder}/data_shifts_2ndorder"
+        calcdatafile = f"{outfolder}/data_shifts_2ndorder",
+        excluded = "../resources/excluded"
     output:
         f"{outfolder}/correlationplots_subplots.png"
     params:
@@ -104,4 +105,4 @@ rule correlationplots_subplots:
     conda:
         "envs/matplotlib.yaml"
     shell:
-        "python scripts/plot_correlationplots_subplots.py {input.expdatafile} {input.calcdatafile} {params.outfolder}"
+        "python scripts/plot_correlationplots_subplots.py {input.expdatafile} {input.calcdatafile} {input.excluded} {params.outfolder}"
