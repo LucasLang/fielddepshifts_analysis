@@ -9,7 +9,7 @@ T_str = ARGS[1]    # temperature
 T = parse(Float64, T_str)
 outfolder = ARGS[2]
 
-grid = lebedev_grids[3]
+grid = lebedev_grids[32]
 
 shparam = get_shparam("$outfolder/model")
 sh = ParaMag.SpinHamiltonian(shparam)       # model used for contact shifts

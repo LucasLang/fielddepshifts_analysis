@@ -10,9 +10,22 @@ rule all:
     input:
         f"{outfolder}/finitefield_subplots_400_298.png",
         f"{outfolder}/correlationplots_subplots.png",
-        f"{outfolder}/populations_spin_1_2"
-        #f"{outfolder}/convergence_gridsize_1200_273_lebedev.png",
-        #f"{outfolder}/convergence_gridsize_400_298_repulsion.png"
+        f"{outfolder}/populations_spin_1_2",
+        f"{outfolder}/convergence_gridsize_1200_273_lebedev.png",
+        f"{outfolder}/convergence_gridsize_400_298_repulsion.png",
+        f"{outfolder}/ffvs2nd_273.png"
+
+rule plot_ffvs2nd:
+    input:
+        data_ffvs2nd = f"{outfolder}/data_finitefieldvs2ndorder_{{temp}}"
+    output:
+        f"{outfolder}/ffvs2nd_{{temp}}.png"
+    params:
+        outfolder = outfolder
+    conda:
+        "envs/matplotlib.yaml"
+    shell:
+        "python scripts/plot_ffvs2nd.py {wildcards.temp} {params.outfolder}"
 
 rule populations_spin_1_2:
     output:
@@ -42,7 +55,7 @@ rule extract_model:
 
 rule finitefield_subplots:
     input:
-        data_convergence = f"{outfolder}/data_convergence_gridsize_{{B0MHz}}_{{temp}}_repulsion",
+        data_convergence = f"{outfolder}/data_convergence_gridsize_{{B0MHz}}_{{temp}}_lebedev",
         data_ffvs2nd = f"{outfolder}/data_finitefieldvs2ndorder_{{temp}}"
     output:
         f"{outfolder}/finitefield_subplots_{{B0MHz}}_{{temp}}.png"

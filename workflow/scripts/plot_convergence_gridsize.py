@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
-from definition_convergence_plot import convergence_plot
+from definition_plots import convergence_plot
 
 B0MHz_str = sys.argv[1]
 B0MHz = float(B0MHz_str)
